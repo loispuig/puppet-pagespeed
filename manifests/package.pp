@@ -1,5 +1,11 @@
 class pagespeed::package inherits pagespeed {
 
+	ensure_packages([
+		'curl'
+	], {
+		'ensure' => 'installed',
+	})
+
 	exec { "pagespeed-download":
 		cwd		=> "/tmp",
 		command => "curl -LO --silent 'https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-stable_current_amd64.deb'",
@@ -11,7 +17,7 @@ class pagespeed::package inherits pagespeed {
 		cwd		=> "/tmp",
 		path    => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/" ],
 		command => "dpkg -i mod-pagespeed-stable_current_amd64.deb; apt-get -f install",
-		require => [Exec["pagespeed-download"], Class['apache']],
+		require => [Exec["pagespeed-download"]],
 	} ->
 
 	class { 'apache::mod::pagespeed': }
