@@ -1,10 +1,11 @@
 class pagespeed::package inherits pagespeed {
 
-	ensure_packages([
-		'curl'
-	], {
-		'ensure' => 'installed',
-	})
+	if ! defined(Package['curl']) { 
+		package { 'curl':
+			ensure => latest,
+			require => Exec['apt_update'],
+		}
+	}
 
 	exec { "pagespeed-download":
 		cwd		=> "/tmp",
